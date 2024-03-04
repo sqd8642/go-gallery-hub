@@ -19,7 +19,7 @@ Delete Tag: DELETE /tags/:id
 
 ## Database structure
 
-'''
+```
 Table galleries {
   id bigserial [primary key]
   created_at timestamp
@@ -45,5 +45,5 @@ Table tags {
 }
 
 Ref: images.gallery < galleries.id
-'''
+```
 
