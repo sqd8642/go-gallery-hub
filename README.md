@@ -37,13 +37,15 @@ Table images {
   caption text
 }
 
-Table tags {
+Table galleries_and_images {
   id bigserial [primary key]
   created_at timestamp
   updated_at timestamp
-  name text
+  gallery bigserial
+  image bigserial
 }
 
-Ref: images.gallery < galleries.id
+Ref: galleries_and_images.restaurant < galleries.id
+Ref: galleries_and_images.menu < image.id
 ```
 
