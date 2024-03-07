@@ -5,16 +5,10 @@ Go App Dev 2024 Spring semseter course project. Image gallery application built 
 It offers a set of endpoints to manage images, galleries, and tags. Below are the supported operations
 
 ```
-Create Gallery: POST /galleries
-Get Gallery by ID: GET /galleries/:id
-Update Gallery: PUT /galleries/:id
-Delete Gallery: DELETE /galleries/:id
-Create Image: POST /galleries/:id/images
-Get Images in Gallery: GET /galleries/:id/images
-Create Tag: POST /tags
-Get Tag by ID: GET /tags/:id
-Update Tag: PUT /tags/:id
-Delete Tag: DELETE /tags/:id
+Create Image: POST /images
+Get Image by ID: GET /images/:id
+Update Image: PUT /images/:id
+Delete Image: DELETE images/:id
 ```
 
 ## Database structure
@@ -32,7 +26,6 @@ Table images {
   id bigserial [primary key]
   created_at timestamp
   updated_at timestamp
-  gallery bigserial
   url text
   caption text
 }
