@@ -21,23 +21,22 @@ type ImageModel struct {
 	ErrorLog  *log.Logger
 }
 
-func (m ImageModel) Insert (image *Image) error {
+func (m ImageModel) Insert(image *Image) error {
 
-	query := ''
-	args := []interface{}{image.CreatedAt, image.UpdatedAt, image.Url, image.Caption}
+	query := `INSERT INTO image (url, caption)
+	 VALUES ($1, $2) 
+	 RETURNING id, created_at, updated_at`
+	
+	args := []interface{}{image.Url, image.Caption}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	return m.DB.QueryRowContext(ctx, query, args ...).Scan(&image.id, &image.CreatedAt, &image.UpdatedAt)
+	return m.DB.QueryRowContext(ctx, query, args ...).Scan(&image.Id, &image.CreatedAt, &image.UpdatedAt)
 }
 
-func (m MenuModel) Get(id int) (*Menu, error) {
+func (m ImageModel) Get(id int) (*Image, error) {
 	// Retrieve a specific menu item based on its ID.
-	query := `
-		SELECT id, created_at, updated_at, caption, url
-		FROM image
-		WHERE id = $1
-		`
+	query := "SELECT id, created_at, updated_at, caption, url FROM image WHERE id = $1"
 	var image Image
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -52,25 +51,17 @@ func (m MenuModel) Get(id int) (*Menu, error) {
 
 func (m ImageModel) Update(image *Image) error {
 	// Update a specific menu item in the database.
-	query := `
-		UPDATE image
-		SET caption = $1
-		WHERE id = $4
-		RETURNING updated_at
-		`
+	query := "UPDATE image SET caption = $1 WHERE id = $2 RETURNING updated_at"
 	args := []interface{}{image.Caption, image.Id}
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	return m.DB.QueryRowContext(ctx, query, args...).Scan(&Image.UpdatedAt)
+	return m.DB.QueryRowContext(ctx, query, args...).Scan(&image.UpdatedAt)
 }
 
 func (m ImageModel) Delete(id int) error {
 	// Delete a specific menu item from the database.
-	query := `
-		DELETE FROM image
-		WHERE id = $1
-		`
+	query := "DELETE FROM image WHERE id = $1"
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 

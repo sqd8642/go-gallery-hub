@@ -27,9 +27,8 @@ func (app *application) respondWithJSON(w http.ResponseWriter, code int, payload
 
 func (app *application) createImageHandler(w http.ResponseWriter, r *http.Request) { 
 	var input struct {
-		Url            string `json:"Url"`
-		Caption        string `json:"Caption"`
-		
+		Url     string `json:"url"`
+		Caption string `json:"caption"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -40,16 +39,16 @@ func (app *application) createImageHandler(w http.ResponseWriter, r *http.Reques
 
 	image := &model.Image{ 
 		Url:          input.Url,
-		Caption:      input.Caption
+		Caption:      input.Caption,
 	}
 
-	err = app.models.Images.Insert(menu)
+	err = app.models.Images.Insert(image)
 	if err != nil {
 		app.respondWithError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return
 	}
 
-	app.respondWithJSON(w, http.StatusCreated, menu)
+	app.respondWithJSON(w, http.StatusCreated, image)
 }
 
 func (app *application) getImageHandler(w http.ResponseWriter, r *http.Request) { 
@@ -71,7 +70,7 @@ func (app *application) getImageHandler(w http.ResponseWriter, r *http.Request) 
 	app.respondWithJSON(w, http.StatusOK, image)
 }
 
-func (app *application) updateMenuHandler(w http.ResponseWriter, r *http.Request) { 
+func (app *application) updateImageHandler(w http.ResponseWriter, r *http.Request) { 
 	vars := mux.Vars(r)
 	param := vars["imageId"]
 
@@ -81,7 +80,7 @@ func (app *application) updateMenuHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	menu, err := app.models.Images.Get(id)
+	image, err := app.models.Images.Get(id)
 	if err != nil {
 		app.respondWithError(w, http.StatusNotFound, "404 Not Found")
 		return
@@ -97,7 +96,7 @@ func (app *application) updateMenuHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if image.Title != nil {
+	if input.Caption != nil {
 		image.Caption = *input.Caption
 	}
 	err = app.models.Images.Update(image)
@@ -106,7 +105,7 @@ func (app *application) updateMenuHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	app.respondWithJSON(w, http.StatusOK, menu)
+	app.respondWithJSON(w, http.StatusOK, image)
 }
 
 func (app *application) deleteImageHandler(w http.ResponseWriter, r *http.Request) { 
@@ -115,11 +114,11 @@ func (app *application) deleteImageHandler(w http.ResponseWriter, r *http.Reques
 
 	id, err := strconv.Atoi(param)
 	if err != nil || id < 1 {
-		app.respondWithError(w, http.StatusBadRequest, "Invalid menu ID")
+		app.respondWithError(w, http.StatusBadRequest, "Invalid image ID")
 		return
 	}
 
-	err = app.models.Menus.Delete(id)
+	err = app.models.Images.Delete(id)
 	if err != nil {
 		app.respondWithError(w, http.StatusInternalServerError, "500 Internal Server Error")
 		return

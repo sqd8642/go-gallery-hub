@@ -28,7 +28,7 @@ func main() {
 	var cfg config
 	flag.StringVar(&cfg.port, "port", ":8081", "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
-	flag.StringVar(&cfg.db.dsn, "db-dsn", "CHANGE", "PostgreSQL DSN") //CHANGE
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://postgres:1234@localhost:5432/gogallery?sslmode=disable", "PostgreSQL DSN") //CHANGE
 	flag.Parse()
 
 	// Connect to DB
@@ -65,7 +65,7 @@ func (app *application) run() {
 
 func openDB(cfg config) (*sql.DB, error) {
 
-	db, err := sql.Open("postgres", cfg.db.dsn)
+	db, err := sql.Open("postgres", "postgres://postgres:1234@localhost:5432/gogallery?sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
