@@ -2,7 +2,7 @@
 
 ## Overview
 Go App Dev 2024 Spring semseter course project. Image gallery application built with Go programming language.
-It offers a set of endpoints to manage images, galleries, and tags. Below are the supported operations
+It offers a set of endpoints to manage images, galleries. Below are the supported operations
 
 ```
 Create Image: POST /images
